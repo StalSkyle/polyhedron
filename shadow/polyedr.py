@@ -165,7 +165,7 @@ class Polyedr:
                     self.facets.append(Facet(vertexes))
 
     # Подсчёт требуемой характеристики
-    def count(self):  # pragma: no cover
+    def count(self):
         for e in self.edges:
             for f in self.facets:
                 e.shadow(f)
