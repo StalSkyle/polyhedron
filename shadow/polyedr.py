@@ -28,7 +28,8 @@ class Segment:
     # Разность двух отрезков всегда является списком из двух отрезков!
     def subtraction(self, other):
         return [
-            Segment(self.beg, self.fin if self.fin < other.beg else other.beg),
+            Segment(self.beg,
+                    self.fin if self.fin < other.beg else other.beg),
             Segment(self.beg if self.beg > other.fin else other.fin, self.fin)
         ]
 
@@ -63,7 +64,8 @@ class Edge:
             return
         # Преобразование списка «просветов», если тень невырождена
         gaps = [s.subtraction(shade) for s in self.gaps]
-        self.gaps = [s for s in reduce(add, gaps, []) if not s.is_degenerate()]
+        self.gaps = [s for s in reduce(add, gaps, []) if
+                     not s.is_degenerate()]
 
     # Преобразование одномерных координат в трёхмерные
     def r3(self, t):
@@ -109,7 +111,8 @@ class Facet:
     def _vert(self, k):
         n = (self.vertexes[k] - self.vertexes[k - 1]).cross(Polyedr.V)
         return n * \
-            (-1.0) if n.dot(self.vertexes[k - 1] - self.center()) < 0.0 else n
+            (-1.0) if n.dot(self.vertexes[k - 1]
+                            - self.center()) < 0.0 else n
 
     # Центр грани
     def center(self):
@@ -129,7 +132,7 @@ class Polyedr:
         self.vertexes, self.edges, self.facets = [], [], []
 
         # искомая характеристика
-        self.output = 0
+        self.output = 0.0
 
         # список строк файла
         with open(file) as f:
@@ -149,7 +152,8 @@ class Polyedr:
                     # задание всех вершин полиэдра
                     x, y, z = (float(x) for x in line.split())
                     self.vertexes.append(
-                        R3(x, y, z).rz(self.alpha).ry(self.beta).rz(self.gamma)
+                        R3(x, y, z).rz(self.alpha).ry(self.beta).rz(
+                            self.gamma)
                         * self.c)
                 else:
                     # вспомогательный массив
@@ -193,10 +197,10 @@ class Polyedr:
                     if 1 < mid < 3:
                         if flag == 0:
                             flag = 1
-                            self.output += sqrt((end.x - begin.x)**2 +
-                                                (end.y - begin.y)**2)
-                        self.output -= sqrt((end_draw.x - begin_draw.x)**2 +
-                                            (end_draw.y - begin_draw.y)**2)
+                            self.output += sqrt((end.x - begin.x) ** 2 +
+                                                (end.y - begin.y) ** 2)
+                        self.output -= sqrt((end_draw.x - begin_draw.x) ** 2 +
+                                            (end_draw.y - begin_draw.y) ** 2)
 
     # Метод изображения полиэдра
     def draw(self, tk):  # pragma: no cover
