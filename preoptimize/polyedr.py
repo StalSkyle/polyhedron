@@ -2,11 +2,11 @@ from math import pi
 from functools import reduce
 from operator import add
 from common.r3 import R3
-from common.tk_drawer import TkDrawer
 
 
 class Segment:
     """ Одномерный отрезок """
+
     # Параметры конструктора: начало и конец отрезка (числа)
 
     def __init__(self, beg, fin):
@@ -29,7 +29,8 @@ class Segment:
     def subtraction(self, other):
         return [Segment(
             self.beg, self.fin if self.fin < other.beg else other.beg),
-            Segment(self.beg if self.beg > other.fin else other.fin, self.fin)]
+            Segment(self.beg if self.beg > other.fin else other.fin,
+                    self.fin)]
 
 
 class Edge:
@@ -83,6 +84,7 @@ class Edge:
 
 class Facet:
     """ Грань полиэдра """
+
     # Параметры конструктора: список вершин
 
     def __init__(self, vertexes):
@@ -95,7 +97,7 @@ class Facet:
     # Нормаль к «горизонтальному» полупространству
     def h_normal(self):
         n = (
-            self.vertexes[1] - self.vertexes[0]).cross(
+                self.vertexes[1] - self.vertexes[0]).cross(
             self.vertexes[2] - self.vertexes[0])
         return n * (-1.0) if n.dot(Polyedr.V) < 0.0 else n
 
@@ -108,8 +110,9 @@ class Facet:
     # Вспомогательный метод
     def _vert(self, k):
         n = (self.vertexes[k] - self.vertexes[k - 1]).cross(Polyedr.V)
-        return n * \
-            (-1.0) if n.dot(self.vertexes[k - 1] - self.center()) < 0.0 else n
+        return n * (-1.0) \
+            if n.dot(
+            self.vertexes[k - 1] - self.center()) < 0.0 else n
 
     # Центр грани
     def center(self):
@@ -143,7 +146,8 @@ class Polyedr:
                     # коэффициент гомотетии
                     self.c = float(buf.pop(0))
                     # углы Эйлера, определяющие вращение
-                    self.alpha, self.beta, self.gamma = (float(x) * pi / 180.0 for x in buf)
+                    self.alpha, self.beta, self.gamma = (float(x) * pi / 180.0
+                                                         for x in buf)
                 elif i == 1:
                     # во второй строке число вершин, граней и рёбер полиэдра
                     nv, nf, ne = (int(x) for x in line.split())
@@ -170,11 +174,8 @@ class Polyedr:
         for e in self.edges:
             for f in self.facets:
                 e.shadow(f)
-            try:
-                if e.gaps[0].beg != 0 or e.gaps[1].fin != 1:
-                    self.partly_visible.append(e)
-            except:
-                pass
+            if e.gaps[0].beg != 0 or e.gaps[1].fin != 1:
+                self.partly_visible.append(e)
         return self
 
     # Метод изображения полиэдра
@@ -187,11 +188,13 @@ class Polyedr:
                     y1 = e.r3(0).y
                     x2 = e.r3(1).x
                     y2 = e.r3(1).y
-                    z=0
+                    z = 0
                     dot_begin = R3(x1, y1, z).rz(
-                        -1*self.alpha).ry(-1*self.beta).rz(-1*self.gamma) * (1/self.c)
+                        -1 * self.alpha).ry(-1 * self.beta).rz(
+                        -1 * self.gamma) * (1 / self.c)
                     dot_end = R3(x2, y2, z).rz(
-                        -1 * self.alpha).ry(-1 * self.beta).rz(-1 * self.gamma) * (1/self.c)
+                        -1 * self.alpha).ry(-1 * self.beta).rz(
+                        -1 * self.gamma) * (1 / self.c)
                     print(dot_begin.x, dot_begin.y)
                     print(dot_end.x, dot_end.y)
 
